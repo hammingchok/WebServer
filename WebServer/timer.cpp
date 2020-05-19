@@ -62,12 +62,16 @@ void sort_timer_lst::adjust_timer(util_timer *timer)
         add_timer(timer, timer->next);
     }
 }
+
+//从链表中移除定时器
 void sort_timer_lst::del_timer(util_timer *timer)
 {
     if (!timer)
     {
         return;
     }
+
+    //只有一个定时器
     if ((timer == head) && (timer == tail))
     {
         delete timer;
@@ -75,6 +79,8 @@ void sort_timer_lst::del_timer(util_timer *timer)
         tail = NULL;
         return;
     }
+
+    //要移除的定时器
     if (timer == head)
     {
         head = head->next;
@@ -82,6 +88,7 @@ void sort_timer_lst::del_timer(util_timer *timer)
         delete timer;
         return;
     }
+
     if (timer == tail)
     {
         tail = tail->prev;
@@ -89,10 +96,13 @@ void sort_timer_lst::del_timer(util_timer *timer)
         delete timer;
         return;
     }
+
+    //在中间位置
     timer->prev->next = timer->next;
     timer->next->prev = timer->prev;
     delete timer;
 }
+
 void sort_timer_lst::tick()
 {
     if (!head)
@@ -219,9 +229,10 @@ class Utils;
 
 void cb_func(client_data *user_data)
 {
-    //从epoll树上移除
+    //从epoll树上移除socket
     epoll_ctl(Utils::u_epollfd, EPOLL_CTL_DEL, user_data->sockfd, 0);
     assert(user_data);
+    //关闭描述符
     close(user_data->sockfd);
     http_conn::m_user_count--;
 }

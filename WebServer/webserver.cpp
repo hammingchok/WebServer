@@ -234,8 +234,9 @@ void WebServer::adjust_timer(util_timer *timer)
 //timer <=> sockfd
 void WebServer::deal_timer(util_timer *timer, int sockfd)
 {
-    //处理对应定时器相关信息
+    //从树上移除socket，并关闭描述符
     timer->cb_func(&users_timer[sockfd]);
+    //移除定时器
     if (timer)
     {
         timer_lst.del_timer(timer);
